@@ -93,7 +93,7 @@ client.on(`messageReactionAdd`, async (reaction, user) => {
 		}
 	}
 
-	if (reaction.message.id == '877228914467045478') {
+	if (reaction.message.id == '885512977179103263') {
 		switch (reaction.emoji.name) {
 			case '🚙':
 				reaction.message.guild.members.fetch(user)
@@ -123,7 +123,7 @@ client.on(`messageReactionAdd`, async (reaction, user) => {
 						ACC: true
 					});
 				}
-				//reaction.message.channel.send('Beep beep, you have now the Assetto Corsa Competitizone-Role')
+				console.log('Beep beep, you have now the Assetto Corsa Competitizone-Role')
 				break;
 			case '🚗':
 				reaction.message.guild.members.fetch(user)
@@ -153,7 +153,7 @@ client.on(`messageReactionAdd`, async (reaction, user) => {
 						RF2: true
 					});
 				}
-				//reaction.message.channel.send('Beep beep, you have now the Rfactor 2-Role')
+				console.log('Beep beep, you have now the Rfactor 2-Role')
 				break;
 			case '🏎️':
 				reaction.message.guild.members.fetch(user)
@@ -183,7 +183,7 @@ client.on(`messageReactionAdd`, async (reaction, user) => {
 						AMS2: true
 					});
 				}
-				//reaction.message.channel.send('Beep beep, you have now the Automobilista 2-Role')
+				console.log('Beep beep, you have now the Automobilista 2-Role')
 				break;
 		}
 	}
@@ -203,7 +203,7 @@ client.on(`messageReactionRemove`, async (reaction, user) => {
 		}
 	}
 
-	if (reaction.message.id == '877228914467045478') {
+	if (reaction.message.id == '885512977179103263') {
 		switch (reaction.emoji.name) {
 			case '🚙':
 				reaction.message.guild.members.fetch(user)
