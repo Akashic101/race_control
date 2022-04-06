@@ -35,6 +35,10 @@ const member = memberSeq.define(`member`, {
 		type: Sequelize.BOOLEAN,
 		defaultValue: 0,
 	},
+	LeMans: {
+		type: Sequelize.BOOLEAN,
+		defaultValue: 0,
+	},
 });
 
 member.sync();
@@ -63,15 +67,19 @@ module.exports = {
 				name: `🏎️`,
 				value: `Automobilista 2`,
 				inline: true
+			}, {
+				name: `🥖`,
+				value: `Le Mans`,
+				inline: true
 			})
 			.setTimestamp()
 			.setFooter(`${pjson.name} V${pjson.version}`, `https://i.imgur.com/YfAcgNv.png`);
 		var msg = await message.channel.send(simEmbed);
 
-		msg.react(`🚙`).then(() => msg.react(`🚗`).then(() => msg.react(`🏎️`)));
+		msg.react(`🚙`).then(() => msg.react(`🚗`).then(() => msg.react(`🏎️`)).then(() => msg.react(`🥖`)));
 
 		var filter = (reaction, user) => {
-			return [`🚙`, `🚗`, `🏎️`].includes(reaction.emoji.name) && !user.bot && user.id === message.author.id;
+			return [`🚙`, `🚗`, `🏎️`, '🥖'].includes(reaction.emoji.name) && !user.bot && user.id === message.author.id;
 		};
 
 		msg.awaitReactions(filter, {
@@ -90,6 +98,9 @@ module.exports = {
 				} else if (reaction.emoji.name === `🏎️`) {
 					sim = `AMS2`;
 					ams2 = 1;
+				} else if (reaction.emoji.name === `🥖`) {
+					sim = `LeMans`;
+					LeMans = 1;
 				}
 			}).then(async empty => {
 				let dmEmbed = new Discord.MessageEmbed()
@@ -153,6 +164,13 @@ module.exports = {
 									allMembers = await member.findAll({
 										where: {
 											AMS2: true
+										}
+									});
+
+								} else if (sim == `LeMans`) {
+									allMembers = await member.findAll({
+										where: {
+											LeMans: true
 										}
 									});
 
