@@ -13,7 +13,7 @@ const memberSeq = new Sequelize(`database`, `user`, `password`, {
 	supportBigNumbers: true,
 });
 
-const member = memberSeq.define(`member`, {
+const memberDB = memberSeq.define(`memberDB`, {
 	id: {
 		primaryKey: true,
 		type: Sequelize.INTEGER,
@@ -41,7 +41,7 @@ const member = memberSeq.define(`member`, {
 	},
 });
 
-member.sync();
+memberDB.sync();
 
 var sim;
 var dmContent;
@@ -148,44 +148,49 @@ module.exports = {
 							if (reaction.emoji.name == `✅`) {
 								var allMembers;
 								if (sim == `ACC`) {
-									allMembers = await member.findAll({
+									allMembers = await memberDB.findAll({
 										where: {
 											ACC: true
 										}
 									});
 								} else if (sim == `RF2`) {
-									allMembers = await member.findAll({
+									allMembers = await memberDB.findAll({
 										where: {
 											RF2: true
 										}
 									});
 
 								} else if (sim == `AMS2`) {
-									allMembers = await member.findAll({
+									allMembers = await memberDB.findAll({
 										where: {
 											AMS2: true
 										}
 									});
 
 								} else if (sim == `LeMans`) {
-									allMembers = await member.findAll({
+									allMembers = await memberDB.findAll({
 										where: {
 											LeMans: true
 										}
 									});
 
 								}
+
+								let sendMember = 0;
+
 								allMembers.forEach(element => {
 									try {
 										client.users.fetch(element.dataValues.user_id).then(user => {
 											user.send(dmContent)
+											sendMember++;
 										});
 									} catch (error) {
+										message.channel.send(`Unable to send a DM to @${user}`)
 										console.log(error);
 									}
 								})
 								let successEmbed = new Discord.MessageEmbed()
-									.setTitle(`The message has been send`)
+									.setTitle(`The message has been send to ${sendMember} members`)
 									.setColor(`RANDOM`)
 									.setTimestamp()
 									.setFooter(`${pjson.name} V${pjson.version}`, `https://i.imgur.com/YfAcgNv.png`)
