@@ -39,9 +39,11 @@ const memberDB = memberSeq.define(`memberDB`, {
 		type: Sequelize.BOOLEAN,
 		defaultValue: 0,
 	},
+	Indy500: {
+		type: Sequelize.BOOLEAN,
+		defaultValue: 0,
+	},
 });
-
-memberDB.sync();
 
 module.exports = {
 	name: `updaterf2`,
@@ -61,7 +63,8 @@ module.exports = {
 					ACC: 0,
 					RF2: 1,
 					AMS2: 0,
-					LeMans: 0
+					LeMans: 0,
+					Indy500: 0
 				});
 				console.log(`User ${element} has been added`);
 			}

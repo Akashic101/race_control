@@ -5,6 +5,8 @@ var pjson = require(`../package.json`);
 const Discord = require(`discord.js`);
 const Sequelize = require(`sequelize`);
 
+let sendMember = 0;
+
 const memberSeq = new Sequelize(`database`, `user`, `password`, {
 	host: `localhost`,
 	dialect: `sqlite`,
@@ -61,7 +63,7 @@ module.exports = {
 				inline: false
 			}, {
 				name: `🚗`,
-				value: `Rfactor 2`,
+				value: `Indy500`,
 				inline: true
 			}, {
 				name: `🏎️`,
@@ -83,18 +85,18 @@ module.exports = {
 		};
 
 		msg.awaitReactions(filter, {
-				max: 1,
-				time: 60000,
-				errors: [`time`]
-			})
+			max: 1,
+			time: 60000,
+			errors: [`time`]
+		})
 			.then(async collected => {
 				var reaction = collected.first();
 				if (reaction.emoji.name === `🚙`) {
 					sim = `ACC`;
 					acc = 1;
 				} else if (reaction.emoji.name === `🚗`) {
-					sim = `RF2`;
-					rf2 = 1;
+					sim = `Indy500`;
+					Indy500 = 1;
 				} else if (reaction.emoji.name === `🏎️`) {
 					sim = `AMS2`;
 					ams2 = 1;
@@ -139,10 +141,10 @@ module.exports = {
 					};
 
 					msg.awaitReactions(filter, {
-							max: 1,
-							time: 60000,
-							errors: [`time`]
-						})
+						max: 1,
+						time: 60000,
+						errors: [`time`]
+					})
 						.then(async collected => {
 							var reaction = collected.first();
 							if (reaction.emoji.name == `✅`) {
@@ -153,7 +155,7 @@ module.exports = {
 											ACC: true
 										}
 									});
-								} else if (sim == `RF2`) {
+								} else if (sim == `Indy500`) {
 									allMembers = await memberDB.findAll({
 										where: {
 											RF2: true
@@ -176,21 +178,16 @@ module.exports = {
 
 								}
 
-								let sendMember = 0;
-
 								allMembers.forEach(element => {
-									try {
-										client.users.fetch(element.dataValues.user_id).then(user => {
-											user.send(dmContent)
-											sendMember++;
-										});
-									} catch (error) {
-										message.channel.send(`Unable to send a DM to @${user}`)
-										console.log(error);
-									}
+									client.users.fetch(element.dataValues.user_id).then(guy => {
+										if (guy.bot == false) {
+											guy.send(dmContent)
+												.catch(message.channel.send(`Unable to send a message to <@${guy.id}. They have direct messages most likely turned off`))
+										}
+									})
 								})
 								let successEmbed = new Discord.MessageEmbed()
-									.setTitle(`The message has been send to ${sendMember} members`)
+									.setTitle('Send message')
 									.setColor(`RANDOM`)
 									.setTimestamp()
 									.setFooter(`${pjson.name} V${pjson.version}`, `https://i.imgur.com/YfAcgNv.png`)

@@ -45,6 +45,8 @@ const memberDB = memberSeq.define(`memberDB`, {
 	},
 });
 
+memberDB.sync();
+
 module.exports = {
 	name: `updateacc`,
 	 execute(client, message, args) {
@@ -54,17 +56,17 @@ module.exports = {
 			const tag = await memberDB.findOne({ where: { user_id: element } });
 
 			if(tag) {
-				const affectedRows = await memberDB.update({ ACC: 1 }, { where: { user_id: element } });
+				const affectedRows = await memberDB.update({ Indy500: 1 }, { where: { user_id: element } });
 				console.log(`User ${element} has been updated`);
 			}
 			else {
 				const tag = await memberDB.create({
 					user_id: element,
-					ACC: 1,
+					ACC: 0,
 					RF2: 0,
 					AMS2: 0,
 					LeMans: 0,
-					Indy500: 0
+					Indy500: 1
 				});
 				console.log(`User ${element} has been added`);
 			}

@@ -61,7 +61,8 @@ module.exports = {
 					ACC: 0,
 					RF2: 0,
 					AMS2: 0,
-					LeMans: 1
+					LeMans: 1,
+					Indy500: 0
 				});
 				console.log(`User ${element} has been added`);
 			}
