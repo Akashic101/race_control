@@ -48,9 +48,9 @@ const memberDB = memberSeq.define(`memberDB`, {
 memberDB.sync();
 
 module.exports = {
-	name: `updateacc`,
+	name: `updateindy500`,
 	 execute(client, message, args) {
-		let id = (message.guild.roles.cache.get('834439827071959040').members.map(m => m.user.id));
+		let id = (message.guild.roles.cache.get('956181729708748870').members.map(m => m.user.id));
 		id.forEach( async element => {
 
 			const tag = await memberDB.findOne({ where: { user_id: element } });

@@ -40,6 +40,10 @@ const memberDB = memberSeq.define(`memberDB`, {
         type: Sequelize.BOOLEAN,
         defaultValue: 0,
     },
+    Indy500: {
+		type: Sequelize.BOOLEAN,
+		defaultValue: 0,
+	},
 });
 
 memberDB.sync();
