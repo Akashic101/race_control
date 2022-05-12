@@ -67,7 +67,7 @@ module.exports = {
 				inline: false
 			}, {
 				name: `🚗`,
-				value: `Indy500`,
+				value: `RF2`,
 				inline: true
 			}, {
 				name: `🏎️`,
@@ -99,8 +99,8 @@ module.exports = {
 					sim = `ACC`;
 					acc = 1;
 				} else if (reaction.emoji.name === `🚗`) {
-					sim = `Indy500`;
-					Indy500 = 1;
+					sim = `RF2`;
+					RF2 = 1;
 				} else if (reaction.emoji.name === `🏎️`) {
 					sim = `AMS2`;
 					ams2 = 1;
@@ -159,7 +159,7 @@ module.exports = {
 											ACC: true
 										}
 									});
-								} else if (sim == `Indy500`) {
+								} else if (sim == `RF2`) {
 									allMembers = await memberDB.findAll({
 										where: {
 											RF2: true
