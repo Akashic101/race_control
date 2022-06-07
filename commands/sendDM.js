@@ -9,7 +9,8 @@ module.exports = {
 	execute(client, message, args) {
 		let roleToDM;
 		let messageToSend;
-        let memberCount;
+		let memberCount;
+		let attachments;
 
 		let rolemap = message.guild.roles.cache.map((r) => r);
 
@@ -31,18 +32,20 @@ module.exports = {
 		message.channel.send(displayRolesEmbed);
 
 		message.channel
-			.awaitMessages((m) => m.author.id == message.author.id, { max: 1, time: 30000 })
+			.awaitMessages((m) => m.author.id == message.author.id, {
+				max: 1,
+				time: 300000,
+			})
 			.then((collected) => {
 				roleToDM = collected.first().content;
 
 				let roleID = roleToDM.replace(/[^0-9]/g, ``);
 				memberCount = message.guild.roles.cache.get(roleID).members.size;
-				console.log(memberCount);
 
 				const messageToSendEmbed = new Discord.MessageEmbed()
 					.setTitle(`Sending a DM`)
 					.setDescription(
-						`**You selected: ** \n\n ${roleToDM} which has ${memberCount} member/s\n\n Please enter the message you want to send. You have 2 minutes to do this or the command will be cancelled`
+						`**You selected: ** \n\n ${roleToDM} which has ${memberCount} member/s\n\n Please enter the message you want to send. If you want to send an image with the DM you can attach it to this message as well`
 					)
 					.setColor(`RANDOM`)
 					.setTimestamp()
@@ -54,14 +57,23 @@ module.exports = {
 				message.channel.send(messageToSendEmbed);
 
 				message.channel
-					.awaitMessages((m) => m.author.id == message.author.id, { max: 1, time: 30000 })
+					.awaitMessages((m) => m.author.id == message.author.id, {
+						max: 1,
+						time: 300000,
+					})
 					.then((collected) => {
 						messageToSend = collected.first().content;
+
+						if (collected.first().attachments) {
+							attachments = collected.first().attachments.first().url;
+						}
 
 						const confirmationEmbed = new Discord.MessageEmbed()
 							.setTitle(`Sending a DM`)
 							.setDescription(
-								`Sending your message will take around ${memberCount/2} seconds. Please write **confirm** if you want to send the message or **deny** if you want to cancel the operation`
+								`Sending your message will take around ${
+									memberCount / 2
+								} seconds. Please write **confirm** if you want to send the message or **deny** if you want to cancel the operation`
 							)
 							.addFields(
 								{ name: `Role`, value: `${roleToDM}` },
@@ -77,7 +89,10 @@ module.exports = {
 						message.channel.send(confirmationEmbed);
 
 						message.channel
-							.awaitMessages((m) => m.author.id == message.author.id, { max: 1, time: 30000 })
+							.awaitMessages((m) => m.author.id == message.author.id, {
+								max: 1,
+								time: 300000,
+							})
 							.then((collected) => {
 								confirmation = collected.first().content;
 
@@ -87,9 +102,21 @@ module.exports = {
 										.get(roleID)
 										.members.map((m) => m.user.id);
 
+									const DMEmbed = new Discord.MessageEmbed()
+										.setColor("#922821")
+										.setTitle("A new message from Global Enduro")
+										.setAuthor("Ed", "https://i.imgur.com/YfAcgNv.png")
+										.setDescription(messageToSend)
+										.setImage(attachments)
+										.setTimestamp()
+										.setFooter(
+											`${pjson.name} V${pjson.version}`,
+											`https://i.imgur.com/YfAcgNv.png`
+										);
+
 									membersWithRole.forEach((member, i) => {
 										setTimeout(function () {
-											client.users.cache.get(member).send(messageToSend);
+											client.users.cache.get(member).send(DMEmbed);
 										}, i * 500);
 									});
 
@@ -131,12 +158,12 @@ module.exports = {
 								message.reply(`error: ` + e);
 							});
 					})
-					.catch((e) => {
-						message.reply(`No answer after 120 seconds, operation canceled.` + e);
+					.catch(() => {
+						message.reply(`No answer after 120 seconds, operation canceled.`);
 					});
 			})
-			.catch((e) => {
-				message.reply(`No answer after 120 seconds, operation canceled.` + e);
+			.catch(() => {
+				message.reply(`No answer after 120 seconds, operation canceled.`);
 			});
 	},
 };
