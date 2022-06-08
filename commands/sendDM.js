@@ -20,7 +20,7 @@ module.exports = {
 		const displayRolesEmbed = new Discord.MessageEmbed()
 			.setTitle(`Sending a DM`)
 			.setDescription(
-				`Please select a role you want to write a message to. You have 30s to do this or this command will be cancelled`
+				`Please select a role you want to write a message to`
 			)
 			.setColor(`RANDOM`)
 			.addField(`Role List`, rolemap)
@@ -64,9 +64,9 @@ module.exports = {
 					.then((collected) => {
 						messageToSend = collected.first().content;
 
-						if (collected.first().attachments) {
+						if (collected.first().attachments.size > 0) {
 							attachments = collected.first().attachments.first().url;
-						}
+						  }
 
 						const confirmationEmbed = new Discord.MessageEmbed()
 							.setTitle(`Sending a DM`)
@@ -107,28 +107,38 @@ module.exports = {
 										.setTitle("A new message from Global Enduro")
 										.setAuthor("Ed", "https://i.imgur.com/YfAcgNv.png")
 										.setDescription(messageToSend)
-										.setImage(attachments)
 										.setTimestamp()
 										.setFooter(
 											`${pjson.name} V${pjson.version}`,
 											`https://i.imgur.com/YfAcgNv.png`
 										);
 
+										if(attachments != 0) {
+											DMEmbed.setImage(attachments)
+										}
+
+									let notAbleToDM = [``];
+
 									membersWithRole.forEach((member, i) => {
 										setTimeout(function () {
-											client.users.cache.get(member).send(DMEmbed);
+											client.users.cache.get(member).send(DMEmbed).catch(() => mess(notAbleToDM.push(member.user.tag)));
 										}, i * 500);
 									});
 
 									const confirmEmbed = new Discord.MessageEmbed()
 										.setTitle(`Sending a DM`)
-										.setDescription(`Message has been send`)
+										.setDescription(`Message has been send to all users`)
 										.setColor(`RANDOM`)
 										.setTimestamp()
 										.setFooter(
 											`${pjson.name} V${pjson.version}`,
 											`https://i.imgur.com/YfAcgNv.png`
 										);
+
+										if(notAbleToDM) {
+											confirmEmbed.setDescription(`Message has been send \n\n I was unable to send the message to following members (most likely due to privacy settings): ${notAbleToDM}`)
+										}
+
 									message.channel.send(confirmEmbed);
 								} else if (confirmation == `deny`) {
 									const denyEmbed = new Discord.MessageEmbed()
@@ -158,12 +168,12 @@ module.exports = {
 								message.reply(`error: ` + e);
 							});
 					})
-					.catch(() => {
-						message.reply(`No answer after 120 seconds, operation canceled.`);
+					.catch((e) => {
+						message.reply(`An error occured: ` + e);
 					});
 			})
-			.catch(() => {
-				message.reply(`No answer after 120 seconds, operation canceled.`);
+			.catch((e) => {
+				message.reply(`An error occured: ` + e);
 			});
 	},
 };
